@@ -1,0 +1,19 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+*.swp
+
+# Claude Code local settings (machine-specific permissions, not site content)
+.claude/settings.local.json
+
+# Personal planning notes (not part of the deployed site)
+/prompts/
+
+# In case any build tooling gets added later
+node_modules/
+__pycache__/
+*.pyc

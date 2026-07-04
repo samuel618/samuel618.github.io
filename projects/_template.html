@@ -1,0 +1,230 @@
+<!--
+  PROJECT PAGE TEMPLATE — not a real project, not linked from anywhere.
+
+  How to use this file:
+  1. Copy it to projects/your-project-slug.html
+  2. Replace the title, tags, links, and the four prose sections
+     (Problem statement / Tools used / Process / Key findings) with
+     real content.
+  3. Scroll to "RESULTS SECTION VARIANTS" below. Keep ONE variant
+     that matches your project type (Notebook, Power BI, or SQL) and
+     delete the other two, along with their HTML comments.
+  4. Add a matching card to index.html's #projects grid — a copy-paste
+     card template lives there as an HTML comment.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="[One-sentence project description for search/social previews].">
+  <meta name="theme-color" content="#12141a">
+  <title>[Project Title] | Samuel Rodriguez</title>
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" href="../assets/images/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="../assets/images/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="../assets/images/icon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css?v=30">
+</head>
+<body>
+
+  <input type="checkbox" id="sidebar-toggle" class="visually-hidden-checkbox">
+  <label for="sidebar-toggle" class="sidebar-toggle-btn" aria-label="Toggle navigation menu">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </label>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <a href="../index.html" class="sidebar-logo">
+        <span class="sidebar-logo-mark">SR</span>
+        Samuel Rodriguez
+      </a>
+
+      <nav class="sidebar-nav">
+        <a href="../index.html#projects" class="active">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>
+          Projects
+        </a>
+        <a href="../index.html#certifications">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M8.5 13.5 7 22l5-3 5 3-1.5-8.5"/></svg>
+          Certifications
+        </a>
+        <a href="../index.html#about">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+          About
+        </a>
+        <a href="../index.html#contact">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          Contact
+        </a>
+      </nav>
+
+      <div class="sidebar-social">
+        <a href="https://github.com/samuel618" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.05 11.05 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.78 1.07.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .3.2.66.79.55A10.52 10.52 0 0 0 23.5 12c0-6.27-5.23-11.5-11.5-11.5z"/></svg>
+          GitHub
+        </a>
+        <a href="https://www.linkedin.com/in/samuel-rodriguez-b9580335b" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <main class="detail-main">
+    <article class="project-detail">
+      <a href="../index.html#projects" class="back-link">&larr; Back to projects</a>
+
+      <header class="project-detail-header">
+        <h1>[Project Title]</h1>
+        <ul class="tag-list">
+          <li class="tag">[Tag]</li>
+          <li class="tag">[Tag]</li>
+          <li class="tag">[Tag]</li>
+        </ul>
+        <div class="project-detail-links">
+          <a href="[repo or live link]" target="_blank" rel="noopener noreferrer" class="project-link">[View repo on GitHub / Visit dashboard] &rarr;</a>
+        </div>
+      </header>
+
+      <section class="project-section">
+        <h2>Problem statement</h2>
+        <p>
+          [What question this project answers and why it matters.]
+        </p>
+      </section>
+
+      <section class="project-section">
+        <h2>Tools used</h2>
+        <ul>
+          <li><strong>[Tool]</strong> - [what it was used for].</li>
+        </ul>
+      </section>
+
+      <section class="project-section">
+        <h2>Process</h2>
+        <ol>
+          <li>[Step one.]</li>
+          <li>[Step two.]</li>
+        </ol>
+      </section>
+
+      <section class="project-section">
+        <h2>Key findings</h2>
+        <ul>
+          <li><strong>[Finding]:</strong> [detail].</li>
+        </ul>
+        <p>[A short paragraph tying the findings together.]</p>
+      </section>
+
+      <!-- =====================================================
+           RESULTS SECTION VARIANTS — keep ONE, delete the rest.
+      ===================================================== -->
+
+      <!-- ---------- VARIANT A: Python / Jupyter Notebook project ----------
+      <section class="project-section">
+        <h2>Notebook</h2>
+        <p>
+          [What's in the notebook — cleaning steps, checks, charts.] It can
+          also be opened directly in a new tab, or downloaded from the
+          <a href="[repo link]" target="_blank" rel="noopener noreferrer">GitHub repo</a>.
+        </p>
+        <div class="notebook-frame">
+          <iframe src="../assets/notebooks/[project-slug].html" title="[Project Title] notebook" loading="lazy"></iframe>
+        </div>
+        <div class="notebook-actions">
+          <a href="../assets/notebooks/[project-slug].html" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Open the notebook in a new tab &rarr;</a>
+        </div>
+      </section>
+      -->
+
+      <!-- ---------- VARIANT B: Power BI dashboard ----------
+
+      Use .powerbi-embed if you have a "Publish to Web" link (File >
+      Publish > Publish to web in Power BI Desktop/Service — note this
+      makes the report public to anyone with the link). Use
+      .powerbi-fallback instead if you only have a screen recording or
+      GIF; delete whichever one you don't use.
+
+      <section class="project-section">
+        <h2>Dashboard</h2>
+        <p>[What the dashboard shows and how to read it.]</p>
+
+        <div class="powerbi-embed">
+          <iframe src="[Power BI Publish to Web embed URL]" title="[Project Title] Power BI dashboard" loading="lazy" allowfullscreen></iframe>
+        </div>
+
+        <div class="powerbi-fallback">
+          <img src="../assets/images/[project-slug]-dashboard.gif" alt="[Project Title] Power BI dashboard walkthrough">
+          <p class="powerbi-fallback-note">
+            Live embed isn't available for this dashboard right now — this is a recorded walkthrough instead.
+          </p>
+        </div>
+      </section>
+      -->
+
+      <!-- ---------- VARIANT C: SQL analysis ----------
+
+      Syntax highlighting is manual: wrap tokens in the query below with
+      .sql-kw (keywords), .sql-fn (functions), .sql-str (strings),
+      .sql-num (numbers), .sql-com (comments).
+
+      <section class="project-section">
+        <h2>Query</h2>
+        <div class="sql-code-block">
+          <pre><code><span class="sql-kw">SELECT</span> region,
+       <span class="sql-fn">COUNT</span>(*) <span class="sql-kw">AS</span> total_orders,
+       <span class="sql-fn">ROUND</span>(<span class="sql-fn">AVG</span>(order_total), 2) <span class="sql-kw">AS</span> avg_order_value
+  <span class="sql-kw">FROM</span> orders
+ <span class="sql-kw">WHERE</span> order_date >= <span class="sql-str">'2025-01-01'</span> <span class="sql-com">-- current fiscal year</span>
+ <span class="sql-kw">GROUP BY</span> region
+ <span class="sql-kw">ORDER BY</span> total_orders <span class="sql-kw">DESC</span>;</code></pre>
+        </div>
+
+        <div class="sql-results">
+          <table>
+            <thead>
+              <tr><th>region</th><th>total_orders</th><th>avg_order_value</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>[Region]</td><td>[N]</td><td>[$N]</td></tr>
+              <tr><td>[Region]</td><td>[N]</td><td>[$N]</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="insight-callout">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2.3h6c0-1.1.4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>
+          <p><strong>Insight:</strong> [The one-sentence takeaway from this query's results.]</p>
+        </div>
+      </section>
+      -->
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p class="footer-text">&copy; 2026 Samuel Rodriguez. Built with HTML, CSS &amp; JavaScript.</p>
+      <div class="footer-social">
+        <a href="https://github.com/samuel618" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.05 11.05 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.78 1.07.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .3.2.66.79.55A10.52 10.52 0 0 0 23.5 12c0-6.27-5.23-11.5-11.5-11.5z"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/samuel-rodriguez-b9580335b" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+        </a>
+        <a href="mailto:samuelrod005@gmail.com" aria-label="Email Samuel">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M2 4h20v16H2V4zm2 2v.01L12 12l8-5.99V6H4zm16 2.24l-7.4 5.55a1 1 0 0 1-1.2 0L4 8.24V18h16V8.24z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <button type="button" id="scroll-top-btn" class="scroll-top-btn" aria-label="Scroll to top">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+  </button>
+
+  <script src="../js/main.js?v=4"></script>
+</body>
+</html>

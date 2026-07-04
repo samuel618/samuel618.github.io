@@ -1,0 +1,1334 @@
+/* -------------------------------------------------------
+   Variables (dark theme is the default look)
+------------------------------------------------------- */
+:root {
+  /* Colors */
+  --color-bg: #08090b;
+  --color-bg-translucent: rgba(8, 9, 11, 0.85);
+  --color-surface: #15171e;
+  --color-surface-soft: rgba(21, 23, 30, 0.5);
+  --color-surface-translucent: rgba(21, 23, 30, 0.8);
+  --color-text: #ebedf0;
+  --color-text-muted: #9298a4;
+  --color-border: #2d313c;
+  --color-primary: #45b8ac;
+  --color-primary-hover: #379288;
+  --color-primary-soft: rgba(69, 184, 172, 0.12);
+  --color-warning: #e2a640;
+  --color-warning-soft: rgba(226, 166, 64, 0.14);
+  --color-violet: #8b7cf6;
+  --color-violet-soft: rgba(139, 124, 246, 0.14);
+  --color-rose: #e37bb0;
+  --color-rose-soft: rgba(227, 123, 176, 0.14);
+
+  /* Typography */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+
+  /* Spacing scale */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --space-6: 4.5rem;
+  --space-7: 6rem;
+
+  /* Layout */
+  --max-width: 1320px;
+  --container-padding: clamp(1.25rem, 5vw, 4rem);
+  --sidebar-expanded: 272px;
+  --project-content-width: min(1200px, 90%);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --transition: 0.15s ease;
+}
+
+/* Smooth cross-fade when navigating between pages (e.g. a project
+   card to its detail page, or "Back to projects"). Native browser
+   feature: no JS, and browsers that don't support it just navigate
+   normally with no error. */
+@view-transition {
+  navigation: auto;
+}
+
+/* -------------------------------------------------------
+   Reset
+------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  line-height: 1.6;
+  padding-left: var(--sidebar-expanded);
+  /* Ambient background: the same crisp dot-grid used in the hero
+     (procedural CSS, not a noisy raster texture) layered over a
+     soft color-blob wash. Sections with their own solid
+     background-color (About, Certifications) simply paint over
+     both, so they only ever show through in the Hero/Projects/
+     Footer bands. Fixed attachment makes those bands read as one
+     continuous backdrop. Purely decorative — doesn't affect
+     layout or element positions. */
+  background-image: radial-gradient(var(--color-border) 1px, transparent 1px), url("../assets/images/bg-ambient.png");
+  background-repeat: repeat, no-repeat;
+  background-position: top left, top center;
+  background-size: 28px 28px, cover;
+  background-attachment: fixed, fixed;
+}
+
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll, scroll;
+  }
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+h1, h2, h3, p {
+  margin: 0;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+}
+
+/* -------------------------------------------------------
+   Sidebar navigation
+   Always open on desktop. On mobile it's an off-canvas
+   drawer opened with the toggle button.
+------------------------------------------------------- */
+.visually-hidden-checkbox {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sidebar-toggle-btn {
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 250;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: var(--sidebar-expanded);
+  background-color: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  z-index: 200;
+  overflow: hidden;
+}
+
+.sidebar-inner {
+  width: var(--sidebar-expanded);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 60px;
+  padding: 0 var(--space-2) 0 1.05rem;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.sidebar-logo-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: #16171c;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.sidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: var(--space-2);
+}
+
+.sidebar-nav a,
+.sidebar-social a {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0.65rem 0.7rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  font-size: 0.95rem;
+  transition: background-color var(--transition), color var(--transition), box-shadow var(--transition);
+}
+
+.sidebar-nav a:hover,
+.sidebar-social a:hover {
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.sidebar-nav a.active {
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--color-primary);
+}
+
+.sidebar-nav svg,
+.sidebar-social svg {
+  flex-shrink: 0;
+}
+
+.sidebar-social {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: var(--space-2);
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+/* -------------------------------------------------------
+   Buttons
+------------------------------------------------------- */
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 1px solid transparent;
+  transition: background-color var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #16171c;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* -------------------------------------------------------
+   Hero
+------------------------------------------------------- */
+.hero {
+  position: relative;
+  padding: var(--space-7) 0;
+  overflow: hidden;
+}
+
+/* Subtle dot-grid texture behind the hero content, fading out
+   toward the edges so it reads as texture, not a busy pattern. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--color-border) 1px, transparent 1px);
+  background-size: 28px 28px;
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 0%, transparent 70%);
+  mask-image: radial-gradient(ellipse at center, #000 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero > .container {
+  position: relative;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+/* "Currently learning" status tag: an outlined pulsing indicator
+   instead of a filled marketing-style badge. */
+.status-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.9rem 0.4rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.status-dot::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid var(--color-primary);
+  opacity: 0.6;
+  animation: status-pulse 2.4s ease-out infinite;
+}
+
+@keyframes status-pulse {
+  0% { transform: scale(0.7); opacity: 0.6; }
+  70% { transform: scale(1.8); opacity: 0; }
+  100% { opacity: 0; }
+}
+
+.hero-headline {
+  font-size: 2.6rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.hero-intro {
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
+  max-width: 54ch;
+}
+
+.hero-actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+/* Hero visual: a small mock dashboard card, filling the right-hand
+   side instead of leaving it empty. */
+.hero-visual {
+  display: flex;
+  justify-content: center;
+}
+
+.chart-card {
+  width: 100%;
+  max-width: 340px;
+  background-color: var(--color-surface-translucent);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.chart-card-header {
+  display: flex;
+  gap: 6px;
+  margin-bottom: var(--space-3);
+}
+
+.chart-card-header span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--color-border);
+}
+
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-1);
+  height: 160px;
+}
+
+.bar {
+  flex: 1;
+  height: var(--h);
+  background-color: var(--color-primary);
+  border-radius: 3px 3px 0 0;
+  opacity: 0.85;
+}
+
+.bar:nth-child(even) {
+  opacity: 0.55;
+}
+
+/* -------------------------------------------------------
+   Section headings
+------------------------------------------------------- */
+.section-kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--color-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--space-2);
+}
+
+.section-kicker::before {
+  content: "";
+  width: 24px;
+  height: 2px;
+  background-color: var(--color-primary);
+  display: inline-block;
+}
+
+.section-heading {
+  font-size: 1.75rem;
+  letter-spacing: -0.01em;
+  margin-bottom: var(--space-4);
+}
+
+.about,
+.projects,
+.certifications,
+.contact {
+  padding: var(--space-6) 0;
+}
+
+.about,
+.certifications {
+  background-color: var(--color-surface-translucent);
+}
+
+.contact-name {
+  font-size: 2.2rem;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-2);
+}
+
+.contact-tagline {
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
+  max-width: 60ch;
+  margin-bottom: var(--space-4);
+}
+
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.project-grid,
+.cert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-4);
+}
+
+/* -------------------------------------------------------
+   About section
+------------------------------------------------------- */
+.about-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: var(--space-2);
+}
+
+.about-bio {
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: var(--space-5);
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.about-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  background-color: var(--color-surface-translucent);
+}
+
+.about-card h3 {
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  margin-bottom: var(--space-1);
+}
+
+.about-card-meta {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  margin-bottom: var(--space-2);
+}
+
+.about-card p:not(.about-card-meta) {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.skills {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.skill-group-title {
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  margin-bottom: var(--space-2);
+}
+
+.skill-group-note {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+}
+
+/* Each skill group gets its own tag color, purely so the three
+   categories are easier to tell apart at a glance. */
+.tag-list--teal .tag {
+  color: var(--color-primary);
+  border-color: rgba(69, 184, 172, 0.35);
+}
+
+.tag-list--violet .tag {
+  color: var(--color-violet);
+  border-color: rgba(139, 124, 246, 0.35);
+}
+
+.tag-list--rose .tag {
+  color: var(--color-rose);
+  border-color: rgba(227, 123, 176, 0.35);
+}
+
+/* -------------------------------------------------------
+   Project cards
+   The whole card is a single link through to the project's
+   detail page — no separate footer links.
+------------------------------------------------------- */
+.project-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  background-color: var(--color-surface-soft);
+  transition: border-color var(--transition), transform var(--transition);
+}
+
+.project-card:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-3px);
+}
+
+.project-card-cover {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 128px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+/* Status badge: an outlined pill for flagging non-standard project
+   states (e.g. "Backend paused"). Warning-colored, not error-red,
+   since it's a hosting/cost decision, not something broken. */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.status-badge--warning {
+  background-color: var(--color-warning-soft);
+  color: var(--color-warning);
+  border: 1px solid rgba(226, 166, 64, 0.35);
+}
+
+.project-card-cover .status-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+}
+
+/* Awards callout: visually set apart from the description text so
+   it reads as a credential, not another sentence of prose. */
+.project-card-awards {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-translucent);
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.project-card-awards svg {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  color: var(--color-primary);
+}
+
+.project-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.project-card-title {
+  font-size: 1.3rem;
+  letter-spacing: -0.01em;
+  transition: color var(--transition);
+}
+
+.project-card:hover .project-card-title {
+  color: var(--color-primary);
+}
+
+.project-card-desc {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag {
+  font-size: 0.78rem;
+  padding: 0.25rem 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-text-muted);
+}
+
+.project-link {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  transition: color var(--transition);
+}
+
+.project-link:hover {
+  color: var(--color-primary-hover);
+}
+
+/* -------------------------------------------------------
+   Certification cards
+   A compact, horizontal layout (icon beside text, not a big
+   cover banner) so these read as "credential" rather than
+   "project" at a glance, even reusing the same accent color.
+------------------------------------------------------- */
+.cert-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  background-color: var(--color-surface-soft);
+  transition: border-color var(--transition), transform var(--transition);
+}
+
+.cert-card:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-3px);
+}
+
+.cert-card-cover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.cert-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.cert-card-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.cert-card-title {
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+  transition: color var(--transition);
+}
+
+.cert-card:hover .cert-card-title {
+  color: var(--color-primary);
+}
+
+.cert-card-date {
+  flex-shrink: 0;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+}
+
+.cert-card-desc {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+/* -------------------------------------------------------
+   Project detail pages
+   Every element inside (heading, prose, tags, links, the
+   notebook embed) shares one content width via
+   --project-content-width, set once on .project-detail and
+   never overridden per-element, so they all line up on the
+   same left edge and right edge. The container sits flush
+   against the sidebar rather than being centered.
+------------------------------------------------------- */
+/* Solid, opaque backdrop for project detail pages: unlike the
+   homepage bands, this page shouldn't show the ambient
+   background image/texture through it, so text stays easy to
+   read regardless of how translucent things get elsewhere. */
+.detail-main {
+  background-color: var(--color-bg-translucent);
+}
+
+.project-detail {
+  max-width: var(--project-content-width);
+  padding: var(--space-5) var(--container-padding) var(--space-7);
+  margin: 0 auto;
+}
+
+.back-link {
+  display: inline-block;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin-bottom: var(--space-4);
+  transition: color var(--transition);
+}
+
+.back-link:hover {
+  color: var(--color-primary);
+}
+
+.project-detail-header {
+  margin-bottom: var(--space-5);
+}
+
+.project-detail-header h1 {
+  font-size: 2.1rem;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-2);
+}
+
+.project-detail-header .status-badge {
+  margin-bottom: var(--space-3);
+}
+
+.project-detail-header .tag-list {
+  margin-bottom: var(--space-3);
+}
+
+.project-detail-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.project-section {
+  margin-bottom: var(--space-6);
+}
+
+.project-section h2 {
+  font-size: 1.35rem;
+  letter-spacing: -0.01em;
+  margin-bottom: var(--space-3);
+}
+
+.project-section p {
+  color: var(--color-text-muted);
+  line-height: 1.75;
+}
+
+.project-section p + p,
+.project-section ul + p,
+.project-section ol + p {
+  margin-top: var(--space-3);
+}
+
+.project-section ul,
+.project-section ol {
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.project-section ul {
+  list-style: disc;
+}
+
+.project-section ul li::marker {
+  color: var(--color-primary);
+}
+
+.project-section li strong {
+  color: var(--color-text);
+}
+
+/* The notebook preview fills the same shared content width as
+   the text above it (no separate max-width or centering), with
+   generous vertical space so it doesn't crowd the surrounding
+   text. */
+.notebook-frame {
+  margin: var(--space-5) 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.notebook-actions {
+  margin-bottom: var(--space-3);
+}
+
+.notebook-frame iframe {
+  width: 100%;
+  height: 760px;
+  border: 0;
+  display: block;
+  background-color: #ffffff;
+}
+
+/* -------------------------------------------------------
+   Power BI embed (template)
+   Power BI "Publish to Web" iframes are a fixed pixel size;
+   aspect-ratio keeps them responsive without distorting the
+   report. Use .powerbi-embed OR .powerbi-fallback, not both.
+------------------------------------------------------- */
+.powerbi-embed {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin: var(--space-4) 0;
+}
+
+.powerbi-embed iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9.75;
+  border: 0;
+  display: block;
+  background-color: #ffffff;
+}
+
+.powerbi-fallback {
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin: var(--space-4) 0;
+}
+
+.powerbi-fallback img,
+.powerbi-fallback video {
+  width: 100%;
+  display: block;
+}
+
+.powerbi-fallback-note {
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px dashed var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+/* -------------------------------------------------------
+   SQL query block + results (template)
+   Syntax highlighting is manual (wrap tokens in the spans
+   below) rather than a JS library, keeping the site
+   dependency-free. Classes: .sql-kw keywords, .sql-fn
+   functions, .sql-str strings, .sql-num numbers, .sql-com
+   comments.
+------------------------------------------------------- */
+.sql-code-block {
+  background-color: var(--color-surface-translucent);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  margin: var(--space-3) 0;
+  overflow-x: auto;
+}
+
+.sql-code-block pre {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  white-space: pre;
+}
+
+.sql-kw {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.sql-fn {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.sql-str,
+.sql-num {
+  color: var(--color-warning);
+}
+
+.sql-com {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.sql-results {
+  margin: var(--space-3) 0;
+  overflow-x: auto;
+}
+
+.sql-results table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.sql-results th,
+.sql-results td {
+  border: 1px solid var(--color-border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.sql-results th {
+  background-color: var(--color-surface-translucent);
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.sql-results td {
+  color: var(--color-text-muted);
+}
+
+/* Insight callout: a short, visually distinct takeaway box
+   for SQL (or any) result section. */
+.insight-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin: var(--space-3) 0;
+  padding: var(--space-3);
+  border-left: 3px solid var(--color-primary);
+  background-color: var(--color-primary-soft);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.insight-callout svg {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  color: var(--color-primary);
+}
+
+.insight-callout p {
+  color: var(--color-text);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.insight-callout strong {
+  color: var(--color-primary);
+}
+
+/* Screenshot gallery: same width rules as the rest of the page
+   (no separate max-width), grid of images added per project. */
+.screenshot-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: var(--space-4);
+}
+
+.screenshot-item {
+  margin: 0;
+}
+
+.screenshot-item figcaption {
+  margin-top: var(--space-1);
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* Screenshot trigger: the clickable/hoverable wrapper around each
+   gallery image that opens the lightbox. */
+.screenshot-trigger {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: none;
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+
+.screenshot-trigger img {
+  display: block;
+  width: 100%;
+}
+
+.screenshot-trigger::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0);
+  transition: background-color var(--transition);
+}
+
+.screenshot-trigger:hover,
+.screenshot-trigger:focus-visible {
+  border-color: var(--color-primary);
+}
+
+.screenshot-trigger:hover::after,
+.screenshot-trigger:focus-visible::after {
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+.screenshot-zoom-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.85);
+  color: #ffffff;
+  opacity: 0;
+  transition: opacity var(--transition), transform var(--transition);
+  pointer-events: none;
+}
+
+.screenshot-trigger:hover .screenshot-zoom-icon,
+.screenshot-trigger:focus-visible .screenshot-zoom-icon {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.screenshot-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: var(--space-3);
+}
+
+/* Lightbox: full-screen preview opened by a screenshot trigger. */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--container-padding);
+  background-color: rgba(8, 9, 12, 0.88);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition);
+}
+
+.lightbox.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox-content {
+  margin: 0;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.lightbox-content img {
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.lightbox-content figcaption {
+  color: var(--color-text);
+  font-size: 0.9rem;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-translucent);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color var(--transition), color var(--transition);
+}
+
+.lightbox-close:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* -------------------------------------------------------
+   Scroll-to-top button
+------------------------------------------------------- */
+.scroll-top-btn {
+  position: fixed;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface-translucent);
+  color: var(--color-text);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity var(--transition), transform var(--transition), border-color var(--transition), color var(--transition);
+}
+
+.scroll-top-btn.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.scroll-top-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* -------------------------------------------------------
+   Footer
+------------------------------------------------------- */
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  padding: var(--space-4) 0;
+}
+
+.footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.footer-text {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.footer-social {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.footer-social a {
+  color: var(--color-text-muted);
+  display: inline-flex;
+  transition: color var(--transition);
+}
+
+.footer-social a:hover {
+  color: var(--color-primary);
+}
+
+/* -------------------------------------------------------
+   Responsive
+------------------------------------------------------- */
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-visual {
+    order: -1;
+  }
+
+  .chart-card {
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding-left: 0;
+  }
+
+  .sidebar-toggle-btn {
+    display: flex;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--transition);
+  }
+
+  .visually-hidden-checkbox:checked ~ .sidebar {
+    transform: translateX(0);
+  }
+
+  .hero {
+    padding: var(--space-5) 0;
+  }
+
+  .hero-headline {
+    font-size: 2rem;
+  }
+
+  .hero-actions,
+  .contact-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .footer-content {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .notebook-frame iframe {
+    height: 420px;
+  }
+
+  .screenshot-gallery {
+    grid-template-columns: 1fr;
+  }
+}
