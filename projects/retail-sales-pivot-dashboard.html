@@ -1,25 +1,11 @@
-<!--
-  PROJECT PAGE TEMPLATE — not a real project, not linked from anywhere.
-
-  How to use this file:
-  1. Copy it to projects/your-project-slug.html
-  2. Replace the title, tags, links, and the four prose sections
-     (Problem statement / Tools used / Process / Key findings) with
-     real content.
-  3. Scroll to "RESULTS SECTION VARIANTS" below. Keep ONE variant
-     that matches your project type (Notebook, Power BI, or SQL) and
-     delete the other two, along with their HTML comments.
-  4. Add a matching card to index.html's #projects grid — a copy-paste
-     card template lives there as an HTML comment.
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="[One-sentence project description for search/social previews].">
+  <meta name="description" content="Retail Sales Pivot Dashboard, a self-service Excel dashboard built with pivot tables, PivotCharts, and slicers on retail transaction data.">
   <meta name="theme-color" content="#12141a">
-  <title>[Project Title] | Samuel Rodriguez</title>
+  <title>Retail Sales Pivot Dashboard | Samuel Rodriguez</title>
   <link rel="icon" href="../favicon.ico" sizes="any">
   <link rel="icon" href="../assets/images/favicon-32x32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="../assets/images/favicon-16x16.png" type="image/png" sizes="16x16">
@@ -78,129 +64,96 @@
       <a href="../index.html#projects" class="back-link">&larr; Back to projects</a>
 
       <header class="project-detail-header">
-        <h1>[Project Title]</h1>
+        <h1>Retail Sales Pivot Dashboard</h1>
         <ul class="tag-list">
-          <li class="tag">[Tag]</li>
-          <li class="tag">[Tag]</li>
-          <li class="tag">[Tag]</li>
+          <li class="tag">Excel</li>
+          <li class="tag">Pivot Tables</li>
+          <li class="tag">Data Cleaning</li>
+          <li class="tag">Dashboard Design</li>
         </ul>
         <div class="project-detail-links">
-          <a href="[repo or live link]" target="_blank" rel="noopener noreferrer" class="project-link">[View repo on GitHub / Visit dashboard] &rarr;</a>
+          <a href="#dashboard" class="project-link">View dashboard &rarr;</a>
         </div>
       </header>
 
       <section class="project-section">
         <h2>Problem statement</h2>
         <p>
-          [What question this project answers and why it matters.]
+          Retail businesses generate thousands of transaction-level records that, on their own,
+          don't drive decisions. Leadership needs a self-service view that answers a handful of
+          recurring questions: which region is most profitable, when demand peaks, whether
+          discounting is helping or hurting margin, and which product lines are worth keeping,
+          without waiting on an analyst to pull a new report every time. This project builds that
+          view using the
+          <a href="https://www.kaggle.com/datasets/vivek468/superstore-dataset-final" target="_blank" rel="noopener noreferrer">Superstore dataset from Kaggle</a>,
+          a synthetic retail transactions dataset rather than data from a real business.
         </p>
       </section>
 
       <section class="project-section">
         <h2>Tools used</h2>
         <ul>
-          <li><strong>[Tool]</strong> - [what it was used for].</li>
+          <li><strong>Microsoft Excel</strong> for Pivot Tables, PivotCharts, Slicers (with Report Connections), Conditional Formatting, and formulas including <code>TRIM()</code>, <code>PROPER()</code>, <code>DATEVALUE()</code>, <code>ISNUMBER()</code>, nested <code>IF()</code>, and <code>ROUNDUP()</code>.</li>
         </ul>
       </section>
 
       <section class="project-section">
         <h2>Process</h2>
         <ol>
-          <li>[Step one.]</li>
-          <li>[Step two.]</li>
+          <li>Standardized inconsistent text casing and whitespace in the Category, Region, and Segment fields, and normalized inconsistent date formats, before removing duplicates, so formatting differences wouldn't mask true duplicate rows. Removed roughly 25 exact duplicate rows, corrected 3 discount values that were off by a factor of 10 (decimal-point entry errors), and fixed 6 negative Quantity values (sign errors). Flagged and excluded 4 rows with an unresolvable Sales = 0 but Profit &ne; 0 inconsistency rather than fabricating a Sales value, and left missing values in non-KPI fields (Customer Name, Postal Code, Product Name) untouched since they don't feed into any of the dashboard's metrics.</li>
+          <li>Engineered two new fields: a Profit Margin column (Profit &divide; Sales) and a Discount Bucket column (0%, 1 to 20%, 21 to 40%, 40%+), to support two of the five KPIs.</li>
+          <li>Built five pivot tables, one per business question, each turned into a chart matched to the data: bar charts for category comparisons, a line chart for trends, and combo charts with a secondary axis where a dollar amount and a ratio needed to appear together.</li>
+          <li>Combined all five charts and two headline KPI cards (Total Sales, Total Profit) onto one Dashboard sheet, with Region and Segment slicers connected to every chart simultaneously for self-service filtering.</li>
         </ol>
       </section>
 
       <section class="project-section">
         <h2>Key findings</h2>
         <ul>
-          <li><strong>[Finding]:</strong> [detail].</li>
+          <li><strong>Total sales and profit:</strong> $2,297,434 in sales and $286,568 in profit, about a 12.5% overall margin.</li>
+          <li><strong>Most profitable region:</strong> West, both in total profit and profit margin.</li>
+          <li><strong>Seasonal peak:</strong> November through December is a consistent sales peak across every year in the dataset, genuine seasonality rather than a one-time spike.</li>
+          <li><strong>Discounting hurts margin:</strong> profit margin declines as discount level increases; heavier discounting is directly associated with thinner margins.</li>
+          <li><strong>Unprofitable sub-categories:</strong> 5 sub-categories operate at a negative average profit margin despite generating real sales volume: Machines, Bookcases, Tables, Appliances, and Binders.</li>
+          <li><strong>Year-over-year growth:</strong> steady growth in both sales and profit from 2014 to 2017.</li>
         </ul>
-        <p>[A short paragraph tying the findings together.]</p>
       </section>
 
-      <!-- =====================================================
-           RESULTS SECTION VARIANTS — keep ONE, delete the rest.
-      ===================================================== -->
-
-      <!-- ---------- VARIANT A: Python / Jupyter Notebook project ----------
       <section class="project-section">
-        <h2>Notebook</h2>
+        <h2>Report</h2>
         <p>
-          [What's in the notebook — cleaning steps, checks, charts.] It can
-          also be opened directly in a new tab, or downloaded from the
-          <a href="[repo link]" target="_blank" rel="noopener noreferrer">GitHub repo</a>.
+          Superstore's overall profitability is healthy (about a 12.5% margin) but uneven across
+          the business. The West region consistently outperforms the other three, making it a
+          candidate for continued investment, while Central, Superstore's weakest region, warrants
+          a closer look at pricing or cost structure. Sales reliably spike every November and
+          December, so inventory and staffing plans should anticipate that seasonal surge rather
+          than react to it. Discounting comes at a real cost: margin erodes steadily as discount
+          depth increases, suggesting current discount thresholds (particularly 40%+) should be
+          reviewed rather than used as a default lever for driving volume. Most notably, five
+          sub-categories, Machines, Bookcases, Tables, Appliances, and Binders, are losing money on
+          average despite meaningful sales volume, making them the clearest, most actionable
+          finding in this analysis: each is a candidate for repricing, renegotiated supplier costs,
+          or discontinuation.
         </p>
-        <div class="notebook-frame">
-          <iframe src="../assets/notebooks/[project-slug].html" title="[Project Title] notebook" loading="lazy"></iframe>
-        </div>
-        <div class="notebook-actions">
-          <a href="../assets/notebooks/[project-slug].html" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Open the notebook in a new tab &rarr;</a>
-        </div>
       </section>
-      -->
 
-      <!-- ---------- VARIANT B: Power BI dashboard ----------
-
-      Use .powerbi-embed if you have a "Publish to Web" link (File >
-      Publish > Publish to web in Power BI Desktop/Service — note this
-      makes the report public to anyone with the link). Use
-      .powerbi-fallback instead if you only have a screen recording or
-      GIF; delete whichever one you don't use.
-
-      <section class="project-section">
+      <section class="project-section" id="dashboard">
         <h2>Dashboard</h2>
-        <p>[What the dashboard shows and how to read it.]</p>
-
-        <div class="powerbi-embed">
-          <iframe src="[Power BI Publish to Web embed URL]" title="[Project Title] Power BI dashboard" loading="lazy" allowfullscreen></iframe>
-        </div>
-
-        <div class="powerbi-fallback">
-          <img src="../assets/images/[project-slug]-dashboard.gif" alt="[Project Title] Power BI dashboard walkthrough">
-          <p class="powerbi-fallback-note">
-            Live embed isn't available for this dashboard right now — this is a recorded walkthrough instead.
-          </p>
-        </div>
-      </section>
-      -->
-
-      <!-- ---------- VARIANT C: SQL analysis ----------
-
-      Syntax highlighting is manual: wrap tokens in the query below with
-      .sql-kw (keywords), .sql-fn (functions), .sql-str (strings),
-      .sql-num (numbers), .sql-com (comments).
-
-      <section class="project-section">
-        <h2>Query</h2>
-        <div class="sql-code-block">
-          <pre><code><span class="sql-kw">SELECT</span> region,
-       <span class="sql-fn">COUNT</span>(*) <span class="sql-kw">AS</span> total_orders,
-       <span class="sql-fn">ROUND</span>(<span class="sql-fn">AVG</span>(order_total), 2) <span class="sql-kw">AS</span> avg_order_value
-  <span class="sql-kw">FROM</span> orders
- <span class="sql-kw">WHERE</span> order_date >= <span class="sql-str">'2025-01-01'</span> <span class="sql-com">-- current fiscal year</span>
- <span class="sql-kw">GROUP BY</span> region
- <span class="sql-kw">ORDER BY</span> total_orders <span class="sql-kw">DESC</span>;</code></pre>
-        </div>
-
-        <div class="sql-results">
-          <table>
-            <thead>
-              <tr><th>region</th><th>total_orders</th><th>avg_order_value</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>[Region]</td><td>[N]</td><td>[$N]</td></tr>
-              <tr><td>[Region]</td><td>[N]</td><td>[$N]</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="insight-callout">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2.3h6c0-1.1.4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>
-          <p><strong>Insight:</strong> [The one-sentence takeaway from this query's results.]</p>
+        <p>
+          The dataset isn't included here since it's a public Kaggle file rather than something
+          original to upload, so this is the finished dashboard: five charts, two KPI cards, and
+          the Region/Segment slicers that drive all of them at once.
+        </p>
+        <div class="screenshot-gallery">
+          <figure class="screenshot-item">
+            <button type="button" class="screenshot-trigger" data-full-src="../assets/images/retail-stores-excel-dashboard.png" data-caption="Retail Sales Pivot Dashboard">
+              <img src="../assets/images/retail-stores-excel-dashboard.png" alt="Excel dashboard with five pivot charts, Total Sales and Total Profit KPI cards, and Region/Segment slicers" loading="lazy">
+              <svg class="screenshot-zoom-icon" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            </button>
+            <figcaption>Dashboard sheet</figcaption>
+          </figure>
         </div>
       </section>
-      -->
     </article>
   </main>
 
@@ -220,6 +173,16 @@
       </div>
     </div>
   </footer>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button type="button" class="lightbox-close" aria-label="Close preview">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+    </button>
+    <figure class="lightbox-content">
+      <img id="lightbox-img" src="" alt="">
+      <figcaption id="lightbox-caption"></figcaption>
+    </figure>
+  </div>
 
   <button type="button" id="scroll-top-btn" class="scroll-top-btn" aria-label="Scroll to top">
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>

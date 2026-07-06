@@ -878,6 +878,14 @@ h1, h2, h3, p {
   color: var(--color-text);
 }
 
+.project-section code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background-color: var(--color-surface-translucent);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+}
+
 /* The notebook preview fills the same shared content width as
    the text above it (no separate max-width or centering), with
    generous vertical space so it doesn't crowd the surrounding
