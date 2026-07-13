@@ -9,9 +9,16 @@ if (sidebarToggle) {
   });
 }
 
-// Highlight the sidebar link for whichever page section is in view
+// Highlight the sidebar link for whichever page section is in view.
+// Only sections whose id matches a sidebar link's hash are tracked, so
+// an in-page anchor target that isn't a nav destination (e.g. a project
+// detail page's #dashboard/#screenshots section) can't hijack the
+// "active" state away from the Projects link.
 const navLinks = document.querySelectorAll(".sidebar-nav a");
-const trackedSections = document.querySelectorAll("main section[id], footer[id]");
+const navHashes = new Set(Array.from(navLinks).map((link) => link.getAttribute("href").split("#")[1]));
+const trackedSections = Array.from(document.querySelectorAll("main section[id], footer[id]")).filter((section) =>
+  navHashes.has(section.id)
+);
 
 if (navLinks.length && trackedSections.length) {
   const setActiveLink = (id) => {
@@ -109,6 +116,48 @@ if (lightbox) {
       closeLightbox();
     }
   });
+}
+
+// Projects carousel: click through project cards one at a time via the
+// prev/next arrows or the dots, instead of scrolling a grid.
+const carouselTrack = document.querySelector(".project-carousel-track");
+
+if (carouselTrack) {
+  const slides = Array.from(carouselTrack.children);
+  const prevBtn = document.querySelector(".carousel-arrow--prev");
+  const nextBtn = document.querySelector(".carousel-arrow--next");
+  const dots = Array.from(document.querySelectorAll(".carousel-dot"));
+  let currentIndex = 0;
+
+  const update = () => {
+    carouselTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex === slides.length - 1;
+    dots.forEach((dot, i) => dot.classList.toggle("active", i === currentIndex));
+  };
+
+  prevBtn.addEventListener("click", () => {
+    if (currentIndex > 0) {
+      currentIndex -= 1;
+      update();
+    }
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (currentIndex < slides.length - 1) {
+      currentIndex += 1;
+      update();
+    }
+  });
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => {
+      currentIndex = i;
+      update();
+    });
+  });
+
+  update();
 }
 
 // Scroll-to-top button: appears after scrolling down a bit

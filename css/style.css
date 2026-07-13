@@ -483,7 +483,6 @@ h1, h2, h3, p {
   gap: var(--space-2);
 }
 
-.project-grid,
 .cert-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -674,6 +673,88 @@ h1, h2, h3, p {
 .project-card-desc {
   color: var(--color-text-muted);
   font-size: 0.95rem;
+}
+
+/* Project carousel: one project card at a time, navigated with the
+   prev/next arrows either side (and the dots below), instead of a
+   scrolling grid. */
+.project-carousel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.project-carousel-viewport {
+  flex: 1;
+  overflow: hidden;
+}
+
+.project-carousel-track {
+  display: flex;
+  transition: transform 0.35s ease;
+}
+
+.project-carousel-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.project-carousel-slide .project-card {
+  width: 100%;
+  max-width: 560px;
+}
+
+.carousel-arrow {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface-soft);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color var(--transition), color var(--transition);
+}
+
+.carousel-arrow:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.carousel-arrow:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: var(--space-4);
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background-color: var(--color-border);
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.carousel-dot:hover {
+  background-color: var(--color-text-muted);
+}
+
+.carousel-dot.active {
+  background-color: var(--color-primary);
 }
 
 .tag-list {
@@ -1338,5 +1419,14 @@ h1, h2, h3, p {
 
   .screenshot-gallery {
     grid-template-columns: 1fr;
+  }
+
+  .project-carousel {
+    gap: var(--space-2);
+  }
+
+  .carousel-arrow {
+    width: 36px;
+    height: 36px;
   }
 }
