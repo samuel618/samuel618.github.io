@@ -118,22 +118,69 @@ if (lightbox) {
   });
 }
 
-// Projects carousel: click through project cards one at a time via the
-// prev/next arrows or the dots, instead of scrolling a grid.
+// Projects carousel: shows several project cards at once (the exact
+// number depends on viewport width, set in CSS breakpoints) and pages
+// through them one card at a time via the prev/next arrows or dots.
+// The current position is remembered in sessionStorage so following a
+// project link and then clicking "Back to projects" returns to the
+// same spot instead of resetting to the first card.
 const carouselTrack = document.querySelector(".project-carousel-track");
 
 if (carouselTrack) {
+  const CAROUSEL_STORAGE_KEY = "projectsCarouselIndex";
   const slides = Array.from(carouselTrack.children);
   const prevBtn = document.querySelector(".carousel-arrow--prev");
   const nextBtn = document.querySelector(".carousel-arrow--next");
-  const dots = Array.from(document.querySelectorAll(".carousel-dot"));
-  let currentIndex = 0;
+  const dotsContainer = document.querySelector(".carousel-dots");
+  const viewport = document.querySelector(".project-carousel-viewport");
+
+  let currentIndex = parseInt(sessionStorage.getItem(CAROUSEL_STORAGE_KEY), 10) || 0;
+  let lastMaxIndex = -1;
+
+  const getStep = () => {
+    const trackGap = parseFloat(getComputedStyle(carouselTrack).columnGap) || 0;
+    return slides[0].getBoundingClientRect().width + trackGap;
+  };
+
+  const getMaxIndex = (step) => {
+    const visibleCount = Math.max(1, Math.round(viewport.clientWidth / step));
+    return Math.max(0, slides.length - visibleCount);
+  };
+
+  const renderDots = (maxIndex) => {
+    dotsContainer.innerHTML = "";
+    for (let i = 0; i <= maxIndex; i += 1) {
+      const dot = document.createElement("button");
+      dot.type = "button";
+      dot.className = "carousel-dot";
+      dot.setAttribute("aria-label", `Go to project group ${i + 1}`);
+      dot.addEventListener("click", () => {
+        currentIndex = i;
+        update();
+      });
+      dotsContainer.appendChild(dot);
+    }
+  };
 
   const update = () => {
-    carouselTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
+    const step = getStep();
+    const maxIndex = getMaxIndex(step);
+
+    if (maxIndex !== lastMaxIndex) {
+      renderDots(maxIndex);
+      lastMaxIndex = maxIndex;
+    }
+
+    currentIndex = Math.min(currentIndex, maxIndex);
+    carouselTrack.style.transform = `translateX(-${currentIndex * step}px)`;
     prevBtn.disabled = currentIndex === 0;
-    nextBtn.disabled = currentIndex === slides.length - 1;
-    dots.forEach((dot, i) => dot.classList.toggle("active", i === currentIndex));
+    nextBtn.disabled = currentIndex >= maxIndex;
+
+    Array.from(dotsContainer.children).forEach((dot, i) => {
+      dot.classList.toggle("active", i === currentIndex);
+    });
+
+    sessionStorage.setItem(CAROUSEL_STORAGE_KEY, String(currentIndex));
   };
 
   prevBtn.addEventListener("click", () => {
@@ -144,19 +191,14 @@ if (carouselTrack) {
   });
 
   nextBtn.addEventListener("click", () => {
-    if (currentIndex < slides.length - 1) {
+    const maxIndex = getMaxIndex(getStep());
+    if (currentIndex < maxIndex) {
       currentIndex += 1;
       update();
     }
   });
 
-  dots.forEach((dot, i) => {
-    dot.addEventListener("click", () => {
-      currentIndex = i;
-      update();
-    });
-  });
-
+  window.addEventListener("resize", update);
   update();
 }
 

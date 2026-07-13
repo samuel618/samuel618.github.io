@@ -675,9 +675,12 @@ h1, h2, h3, p {
   font-size: 0.95rem;
 }
 
-/* Project carousel: one project card at a time, navigated with the
-   prev/next arrows either side (and the dots below), instead of a
-   scrolling grid. */
+/* Project carousel: several project cards visible at once (1 on
+   mobile, up to 4 on wide desktops), navigated with the prev/next
+   arrows either side (and the dots below) instead of a scrolling
+   grid. JS measures the rendered slide width to figure out how many
+   are visible and how far to translate, so it stays in sync with
+   whatever breakpoint is active without duplicating these widths. */
 .project-carousel {
   display: flex;
   align-items: center;
@@ -691,19 +694,36 @@ h1, h2, h3, p {
 
 .project-carousel-track {
   display: flex;
+  gap: var(--space-3);
   transition: transform 0.35s ease;
 }
 
 .project-carousel-slide {
   flex: 0 0 100%;
   min-width: 0;
-  display: flex;
-  justify-content: center;
 }
 
 .project-carousel-slide .project-card {
   width: 100%;
-  max-width: 560px;
+  height: 100%;
+}
+
+@media (min-width: 768px) {
+  .project-carousel-slide {
+    flex-basis: calc((100% - var(--space-3)) / 2);
+  }
+}
+
+@media (min-width: 1024px) {
+  .project-carousel-slide {
+    flex-basis: calc((100% - 2 * var(--space-3)) / 3);
+  }
+}
+
+@media (min-width: 1400px) {
+  .project-carousel-slide {
+    flex-basis: calc((100% - 3 * var(--space-3)) / 4);
+  }
 }
 
 .carousel-arrow {
