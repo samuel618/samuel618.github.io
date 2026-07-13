@@ -580,6 +580,7 @@ h1, h2, h3, p {
    detail page — no separate footer links.
 ------------------------------------------------------- */
 .project-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -593,6 +594,23 @@ h1, h2, h3, p {
 .project-card:hover {
   border-color: var(--color-primary);
   transform: translateY(-3px);
+}
+
+/* Stretched-link overlay: makes the whole card clickable while still
+   allowing the "See more" button below to be its own real button
+   (a button nested inside a link isn't valid HTML). The overlay sits
+   behind everything (z-index 1); anything that needs its own click
+   behavior, like .card-see-more, is given z-index 2 so it wins. */
+.project-card-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: var(--radius-md);
+}
+
+.project-card-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .project-card-cover {
@@ -675,12 +693,39 @@ h1, h2, h3, p {
   font-size: 0.95rem;
 }
 
+/* "See more": revealed only when JS finds the description is actually
+   truncated (or the card has an awards callout to reveal). Sits above
+   the stretched-link overlay (z-index 2) so it's independently
+   clickable instead of triggering the card-wide link. */
+.card-see-more {
+  align-self: flex-start;
+  position: relative;
+  z-index: 2;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.card-see-more:hover {
+  text-decoration: underline;
+}
+
 /* Project carousel: several project cards visible at once (1 on
-   mobile, up to 4 on wide desktops), navigated with the prev/next
-   arrows either side (and the dots below) instead of a scrolling
-   grid. JS measures the rendered slide width to figure out how many
-   are visible and how far to translate, so it stays in sync with
-   whatever breakpoint is active without duplicating these widths. */
+   mobile, up to 3 on desktop), navigated with the prev/next arrows
+   either side (and the dots below) instead of a scrolling grid. JS
+   measures the rendered slide width to figure out how many are
+   visible and how far to translate, so it stays in sync with
+   whatever breakpoint is active without duplicating these widths.
+
+   To keep the visible cards a consistent height despite differing
+   description lengths and the awards callout (Dottica only), the
+   title is reserved to a fixed two-line height, the description is
+   clamped to 4 lines by default, and the awards callout stays hidden
+   until "See more" is expanded. */
 .project-carousel {
   display: flex;
   align-items: center;
@@ -694,6 +739,7 @@ h1, h2, h3, p {
 
 .project-carousel-track {
   display: flex;
+  align-items: flex-start;
   gap: var(--space-3);
   transition: transform 0.35s ease;
 }
@@ -705,7 +751,45 @@ h1, h2, h3, p {
 
 .project-carousel-slide .project-card {
   width: 100%;
-  height: 100%;
+}
+
+.project-carousel-slide .project-card-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  min-height: 3.2em;
+}
+
+.project-carousel-slide .project-card-desc {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
+}
+
+.project-carousel-slide .project-card.is-expanded .project-card-desc {
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+  overflow: visible;
+}
+
+.project-carousel-slide .project-card-awards {
+  display: none;
+}
+
+.project-carousel-slide .project-card.is-expanded .project-card-awards {
+  display: flex;
+}
+
+/* Reserves space for 2 rows of tags regardless of how many actually
+   wrap, so a card with 3 short tags on one line isn't shorter than a
+   card whose tags wrap to two. */
+.project-carousel-slide .tag-list {
+  min-height: 9rem;
+  align-content: flex-start;
 }
 
 @media (min-width: 768px) {
@@ -717,12 +801,6 @@ h1, h2, h3, p {
 @media (min-width: 1024px) {
   .project-carousel-slide {
     flex-basis: calc((100% - 2 * var(--space-3)) / 3);
-  }
-}
-
-@media (min-width: 1400px) {
-  .project-carousel-slide {
-    flex-basis: calc((100% - 3 * var(--space-3)) / 4);
   }
 }
 

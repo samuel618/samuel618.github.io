@@ -11,7 +11,7 @@
   <link rel="icon" href="../assets/images/favicon-16x16.png" type="image/png" sizes="16x16">
   <link rel="icon" href="../assets/images/icon-192.png" type="image/png" sizes="192x192">
   <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
-  <link rel="stylesheet" href="../css/style.css?v=33">
+  <link rel="stylesheet" href="../css/style.css?v=34">
 </head>
 <body>
 
@@ -69,7 +69,6 @@
           <li class="tag">PostgreSQL</li>
           <li class="tag">Power BI</li>
           <li class="tag">DAX</li>
-          <li class="tag">Excel</li>
         </ul>
         <div class="project-detail-links">
           <a href="#dashboard" class="project-link">View dashboard &rarr;</a>
@@ -105,11 +104,21 @@
       </section>
 
       <section class="project-section">
+        <h2>Data source</h2>
+        <p>
+          Chinook is a free, synthetic sample database modeling a digital music store (customers,
+          invoices, tracks, albums, artists, employees). Source:
+          <a href="https://github.com/lerocha/chinook-database" target="_blank" rel="noopener noreferrer">github.com/lerocha/chinook-database</a>.
+          This is simulated data, not a real business, so the findings reflect the dataset's small
+          sample size rather than real-world scale.
+        </p>
+      </section>
+
+      <section class="project-section">
         <h2>Tools used</h2>
         <ul>
           <li><strong>PostgreSQL</strong> - wrote the SQL (joins, CTEs, window functions, multi-CTE set comparisons) that answered each business question against the Chinook sample database.</li>
           <li><strong>Power BI</strong> - connected to each SQL query as a custom data source and built DAX measures for interactivity.</li>
-          <li><strong>Excel</strong> - built a pivot table fallback version of the dashboard.</li>
         </ul>
       </section>
 
@@ -128,9 +137,119 @@
         <ul>
           <li><strong>Genre revenue:</strong> Rock dominates at 35.5% of total, with Jazz, Metal, and Alternative &amp; Punk trailing well behind.</li>
           <li><strong>Country revenue:</strong> The USA leads at 22.5% of total, with Canada and France trailing.</li>
+          <li><strong>Employee performance:</strong> fairly even across the 3 sales support reps (Jane Peacock $833, Margaret Park $775, Steve Johnson $720), with no single rep dominating, suggesting a balanced customer distribution.</li>
           <li><strong>Track versus album purchases:</strong> 97.8% of purchase revenue comes from individual track purchases rather than complete albums, reflecting the well-documented industry shift away from album-bundle buying once digital storefronts unbundled purchases.</li>
           <li><strong>Customer churn:</strong> the churn rate sits at 67.8% (40 of 59 customers inactive for 3+ months relative to the dataset's own timeline), suggesting most of the customer base are one-time or infrequent buyers.</li>
         </ul>
+      </section>
+
+      <section class="project-section">
+        <h2>SQL queries used</h2>
+
+        <p><strong>Genre revenue</strong></p>
+        <div class="sql-code-block">
+          <pre><code><span class="sql-kw">SELECT</span> g.name, <span class="sql-fn">SUM</span>(i.unit_price * i.quantity) <span class="sql-kw">AS</span> revenue
+<span class="sql-kw">FROM</span> genre <span class="sql-kw">AS</span> g
+<span class="sql-kw">INNER JOIN</span> track <span class="sql-kw">AS</span> t <span class="sql-kw">ON</span> g.genre_id = t.genre_id
+<span class="sql-kw">INNER JOIN</span> invoice_line <span class="sql-kw">AS</span> i <span class="sql-kw">ON</span> t.track_id = i.track_id
+<span class="sql-kw">GROUP BY</span> g.name
+<span class="sql-kw">ORDER BY</span> revenue <span class="sql-kw">DESC</span></code></pre>
+        </div>
+
+        <p><strong>Employee performance</strong></p>
+        <div class="sql-code-block">
+          <pre><code><span class="sql-kw">SELECT</span>
+    e.employee_id,
+    <span class="sql-fn">CONCAT</span>(e.first_name, <span class="sql-str">' '</span>, e.last_name) <span class="sql-kw">as</span> employee_name,
+    <span class="sql-fn">SUM</span>(il.unit_price * il.quantity) <span class="sql-kw">as</span> revenue
+<span class="sql-kw">FROM</span> employee <span class="sql-kw">as</span> e
+<span class="sql-kw">INNER JOIN</span> customer <span class="sql-kw">as</span> c <span class="sql-kw">ON</span> e.employee_id = c.support_rep_id
+<span class="sql-kw">INNER JOIN</span> invoice <span class="sql-kw">as</span> i <span class="sql-kw">ON</span> c.customer_id = i.customer_id
+<span class="sql-kw">INNER JOIN</span> invoice_line <span class="sql-kw">as</span> il <span class="sql-kw">ON</span> i.invoice_id = il.invoice_id
+<span class="sql-kw">GROUP BY</span> e.employee_id
+<span class="sql-kw">ORDER BY</span> revenue <span class="sql-kw">DESC</span></code></pre>
+        </div>
+
+        <p><strong>Country revenue</strong></p>
+        <div class="sql-code-block">
+          <pre><code><span class="sql-kw">SELECT</span> billing_country <span class="sql-kw">AS</span> country, <span class="sql-fn">SUM</span>(unit_price * quantity) <span class="sql-kw">AS</span> revenue
+<span class="sql-kw">FROM</span> invoice
+<span class="sql-kw">INNER JOIN</span> invoice_line <span class="sql-kw">USING</span>(invoice_id)
+<span class="sql-kw">GROUP BY</span> billing_country
+<span class="sql-kw">ORDER BY</span> revenue <span class="sql-kw">DESC</span></code></pre>
+        </div>
+
+        <p><strong>Singles versus albums</strong> (multi-CTE, per-invoice-per-album complete-set detection)</p>
+        <div class="sql-code-block">
+          <pre><code><span class="sql-kw">WITH</span> track_per_album <span class="sql-kw">AS</span> (
+    <span class="sql-kw">SELECT</span> album_id, <span class="sql-fn">COUNT</span>(track_id) <span class="sql-kw">as</span> track_count
+    <span class="sql-kw">FROM</span> album
+    <span class="sql-kw">INNER JOIN</span> track <span class="sql-kw">USING</span>(album_id)
+    <span class="sql-kw">GROUP BY</span> album_id
+),
+track_per_invoice_album <span class="sql-kw">AS</span> (
+    <span class="sql-kw">SELECT</span> a.album_id, i.invoice_id, <span class="sql-fn">COUNT</span>(<span class="sql-kw">DISTINCT</span> t.track_id) <span class="sql-kw">as</span> track_count
+    <span class="sql-kw">FROM</span> invoice_line <span class="sql-kw">as</span> i
+    <span class="sql-kw">INNER JOIN</span> track <span class="sql-kw">as</span> t <span class="sql-kw">ON</span> i.track_id = t.track_id
+    <span class="sql-kw">INNER JOIN</span> album <span class="sql-kw">as</span> a <span class="sql-kw">ON</span> t.album_id = a.album_id
+    <span class="sql-kw">GROUP BY</span> a.album_id, i.invoice_id
+),
+purchase_type <span class="sql-kw">AS</span>(
+    <span class="sql-kw">SELECT</span>
+        t1.album_id,
+        t2.invoice_id,
+        <span class="sql-kw">CASE</span>
+            <span class="sql-kw">WHEN</span> t1.track_count = t2.track_count <span class="sql-kw">THEN</span> <span class="sql-str">'Album'</span>
+            <span class="sql-kw">ELSE</span> <span class="sql-str">'Singles'</span>
+        <span class="sql-kw">END</span> <span class="sql-kw">AS</span> purchase_type
+    <span class="sql-kw">FROM</span> track_per_album <span class="sql-kw">as</span> t1
+    <span class="sql-kw">INNER JOIN</span> track_per_invoice_album <span class="sql-kw">as</span> t2 <span class="sql-kw">ON</span> t1.album_id = t2.album_id
+)
+<span class="sql-kw">SELECT</span> p.purchase_type, <span class="sql-fn">SUM</span>(i.unit_price * i.quantity) <span class="sql-kw">as</span> revenue
+<span class="sql-kw">FROM</span> invoice_line <span class="sql-kw">as</span> i
+<span class="sql-kw">INNER JOIN</span> track <span class="sql-kw">as</span> t <span class="sql-kw">ON</span> i.track_id = t.track_id
+<span class="sql-kw">INNER JOIN</span> purchase_type <span class="sql-kw">as</span> p <span class="sql-kw">ON</span> i.invoice_id = p.invoice_id <span class="sql-kw">AND</span> t.album_id = p.album_id
+<span class="sql-kw">GROUP BY</span> p.purchase_type
+<span class="sql-kw">ORDER BY</span> revenue <span class="sql-kw">DESC</span></code></pre>
+        </div>
+
+        <p><strong>Churn risk</strong> (3-month inactivity threshold, relative to the dataset's own latest transaction date)</p>
+        <div class="sql-code-block">
+          <pre><code><span class="sql-kw">WITH</span> max_date <span class="sql-kw">AS</span>(
+    <span class="sql-kw">SELECT</span> <span class="sql-fn">DATE</span>(<span class="sql-fn">MAX</span>(invoice_date)) <span class="sql-kw">as</span> latest_date
+    <span class="sql-kw">FROM</span> invoice
+),
+max_date_per_customer <span class="sql-kw">AS</span>(
+    <span class="sql-kw">SELECT</span> <span class="sql-fn">DATE</span>(<span class="sql-fn">MAX</span>(invoice_date)) <span class="sql-kw">as</span> latest_date_customer, customer_id
+    <span class="sql-kw">FROM</span> customer
+    <span class="sql-kw">INNER JOIN</span> invoice <span class="sql-kw">USING</span>(customer_id)
+    <span class="sql-kw">GROUP BY</span> customer_id
+)
+<span class="sql-kw">SELECT</span>
+    customer_id,
+    <span class="sql-kw">CASE</span>
+        <span class="sql-kw">WHEN</span> (((<span class="sql-kw">SELECT</span> latest_date <span class="sql-kw">from</span> max_date) - latest_date_customer)/<span class="sql-num">30</span> &gt;= <span class="sql-num">3</span>) <span class="sql-kw">THEN</span> <span class="sql-str">'churned'</span>
+        <span class="sql-kw">ELSE</span> <span class="sql-str">'not churned'</span>
+    <span class="sql-kw">END</span> <span class="sql-kw">AS</span> churned
+<span class="sql-kw">FROM</span> customer
+<span class="sql-kw">INNER JOIN</span> max_date_per_customer <span class="sql-kw">USING</span>(customer_id)
+<span class="sql-kw">ORDER BY</span> customer_id <span class="sql-kw">ASC</span></code></pre>
+        </div>
+      </section>
+
+      <section class="project-section">
+        <h2>Report</h2>
+        <p>
+          Revenue is heavily concentrated: Rock alone accounts for over a third of genre revenue,
+          and the USA outpaces every other country by a wide margin, so a small slice of genres and
+          markets drives most of the store's income. Purchase behavior confirms a well-documented
+          industry trend: customers overwhelmingly buy individual tracks rather than full albums,
+          with singles accounting for nearly all purchase revenue. Sales support performance is
+          balanced across all three reps, so uneven staffing isn't a factor limiting growth. The
+          real concern is retention: with two-thirds of customers inactive for three or more months,
+          the store's biggest growth lever is keeping existing customers engaged, not acquiring new
+          ones or restructuring the sales team.
+        </p>
       </section>
     </article>
   </main>
@@ -166,6 +285,6 @@
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
   </button>
 
-  <script src="../js/main.js?v=6"></script>
+  <script src="../js/main.js?v=7"></script>
 </body>
 </html>

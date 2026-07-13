@@ -202,6 +202,34 @@ if (carouselTrack) {
   update();
 }
 
+// Project card "See more": each card's description is clamped to a
+// fixed number of lines (and the awards callout, where present, is
+// hidden) so all the visible cards stay a consistent height. The
+// button only appears when there's actually more to show, and only
+// then does clicking it reveal the full description (and awards, if
+// any).
+document.querySelectorAll(".project-card").forEach((card) => {
+  const desc = card.querySelector(".project-card-desc");
+  const seeMoreBtn = card.querySelector(".card-see-more");
+  if (!desc || !seeMoreBtn) return;
+
+  const hasAwards = Boolean(card.querySelector(".project-card-awards"));
+
+  const syncVisibility = () => {
+    if (card.classList.contains("is-expanded")) return;
+    const isTruncated = desc.scrollHeight > desc.clientHeight + 1;
+    seeMoreBtn.hidden = !(isTruncated || hasAwards);
+  };
+
+  seeMoreBtn.addEventListener("click", () => {
+    const expanded = card.classList.toggle("is-expanded");
+    seeMoreBtn.textContent = expanded ? "See less" : "See more";
+  });
+
+  syncVisibility();
+  window.addEventListener("resize", syncVisibility);
+});
+
 // Scroll-to-top button: appears after scrolling down a bit
 const scrollTopBtn = document.getElementById("scroll-top-btn");
 
